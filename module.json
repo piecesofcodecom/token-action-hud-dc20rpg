@@ -1,0 +1,59 @@
+{
+  "id": "token-action-hud-dc20rpg",
+  "title": "Token Action HUD DC20 RPG",
+  "description": "Provide support for the DC20 RPG game system with Token Action HUD Core",
+  "version": "placeholder",
+  "compatibility": {
+    "minimum": "11",
+    "verified": "12",
+    "maximum": ""
+  },
+  "authors": [
+    {
+      "name": "Snagov",
+      "url": "https://github.com/piecesofcode",
+      "discord": "snagov",
+      "flags": {}
+    }
+  ],
+  "socket": true,
+  "bugs": "https://github.com/piecesofcode/token-action-hud-dc20rpg/issues",
+  "media": [
+    {
+      "type": "setup",
+      "url": "https://www.gameskinny.com/wp-content/uploads/2024/06/dc20-logo-purple.jpg",
+      "thumbnail": "https://www.gameskinny.com/wp-content/uploads/2024/06/dc20-logo-purple.jpg"
+    }
+  ],
+  "relationships": {
+    "systems": [
+      {
+        "id": "dc20rpg",
+        "type": "system",
+        "compatibility": {}
+      }
+    ],
+    "requires": [
+      {
+        "id": "token-action-hud-core",
+        "type": "module",
+        "compatibility": {
+          "minimum": "2.0.3",
+          "verified": "2.0.3"
+        }
+      }
+    ]
+  },
+  "esmodules": [
+    "./dist/token-action-hud-dc20rpg.min.js"
+  ],
+  "styles": [
+    "styles/token-action-hud-dc20rpg.css"
+  ],
+  "languages": [],
+  "url": "https://github.com/mrcomac/token-action-hud-dc20rpg",
+  "manifest": "https://github.com/mrcomac/token-action-hud-dc20rpg/releases/latest/download/module.json",
+  "download": "placeholder",
+  "license": "LICENSE",
+  "readme": "README.md"
+}

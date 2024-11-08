@@ -43,7 +43,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                     id: el.id,
                     img: el.img,
                     name: el.name,
-                    tooltip: el.system.description,
+                    tooltip: format_tooltip(el.system.description),
                     encodedValue: [parent.id, el.id].join(this.delimiter)
                 }
                 if ( ["weapon"].includes(el.type) ) {
@@ -83,7 +83,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                     id: el.id,
                     img: el.img,
                     name: el.name,
-                    tooltip: el.system.description,
+                    tooltip: format_tooltip(el.system.description),
                     encodedValue: [parent.id, el.id].join(this.delimiter)
                 }
                 items.push(element)
@@ -99,7 +99,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                     id: el.id,
                     img: el.img,
                     name: el.name,
-                    tooltip: el.system.description,
+                    tooltip: format_tooltip(el.system.description),
                     encodedValue: [parent.id, el.id].join(this.delimiter)
                 }
                 items.push(element)
@@ -132,7 +132,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                         id: skill,
                         name: coreModule.api.Utils.i18n(`${prefix_title}.${skill}`),
                         img: PATH_ASSETS + "/" + skill + ".svg",
-                        tooltip: `${page.text.content}`,
+                        tooltip: format_tooltip(`${page.text.content}`),
                         info1: { text: Number(mod) > 0 ? `+${mod}` : `${mod}` },
                         encodedValue: [macroType, skill].join(this.delimiter),
                     })
@@ -153,7 +153,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                         id: attribute,
                         name: coreModule.api.Utils.i18n(`dc20rpg.attributes.${attribute}`),
                         img: PATH_ASSETS + "/" + attribute + ".webp",
-                        tooltip: `Roll ${coreModule.api.Utils.i18n(`dc20rpg.attributes.${attribute}`)} ${macroType}`,
+                        tooltip: format_tooltip(`Roll ${coreModule.api.Utils.i18n(`dc20rpg.attributes.${attribute}`)} ${macroType}`),
                         info1: { text: Number(mod) > 0 ? `+${mod}` : `${mod}` },
                         encodedValue: [macroType, attribute].join(this.delimiter),
                     })
@@ -170,14 +170,14 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                     actions.push({
                         id:`${point}`,
                         icon1: `<i class="fa-solid fa-${this.actor.system.resources[point].value}"></i>`,
-                        tooltip: coreModule.api.Utils.i18n(`dc20rpg.sheet.resource.regain${capitalizeFirstLetter(point)}`),
+                        tooltip: format_tooltip("Current "+coreModule.api.Utils.i18n(`dc20rpg.resource.${point}`)),
                         encodedValue: [point, ''].join(this.delimiter)
                     
                     })
                     actions.push({
                         id:`${point}Add`,
                         icon1: '<i class="fa fa-plus" aria-hidden="true"></i>',
-                        tooltip: coreModule.api.Utils.i18n(`dc20rpg.sheet.resource.regain${capitalizeFirstLetter(point)}`),
+                        tooltip: format_tooltip(coreModule.api.Utils.i18n(`dc20rpg.sheet.resource.regain${capitalizeFirstLetter(point)}`)),
                         encodedValue: [point, 'add'].join(this.delimiter)
                     
                     })

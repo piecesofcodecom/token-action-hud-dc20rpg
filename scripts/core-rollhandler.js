@@ -57,7 +57,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
 
         /** @private */
         async _rollItem(event, macroType, actionId) {
-            CONFIG.DC20RPG.promptItemRoll(this.token.actor, this.token.actor.items.get(actionId))
+            game.dc20rpg.tools.promptItemRoll(this.token.actor, this.token.actor.items.get(actionId))
         }
 
         /** @private */
@@ -89,7 +89,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 }
             };
 
-            CONFIG.DC20RPG.rollPrompt(data, game.user.id)
+            game.dc20rpg.tools.rollPrompt(data, game.user.id)
         }
         /** @private */
         _rollSkill(event, actionId, actor) {
@@ -110,7 +110,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 }
             };
 
-            CONFIG.DC20RPG.rollPrompt(data, game.user.id)
+            game.dc20rpg.tools.rollPrompt(data, game.user.id)
         }
 
         _rollTradeSkill(event, actionId, actor) {
@@ -131,7 +131,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 }
             };
 
-            CONFIG.dc20rpg.rollPrompt(data, game.user.id)
+            game.dc20rpg.tools.rollPrompt(data, game.user.id)
         }
     }
 })

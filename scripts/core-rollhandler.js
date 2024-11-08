@@ -79,17 +79,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 label: coreModule.api.Utils.i18n(`dc20rpg.attributes.${actionId}`) +" "+String(macroType).charAt(0).toUpperCase() + String(macroType).slice(1),
                 type: "attribute"+String(macroType).charAt(0).toUpperCase() + String(macroType).slice(1)
             };
-            const data = {
-                type: "rollPrompt",
-                payload: {
-                    actorId: actorId,
-                    details: details,
-                    isToken: false,
-                    tokenId: null
-                }
-            };
-
-            game.dc20rpg.tools.rollPrompt(data, game.user.id)
+            game.dc20rpg.tools.promptRoll(this.actor, details)
         }
         /** @private */
         _rollSkill(event, actionId, actor) {
@@ -100,17 +90,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 label: coreModule.api.Utils.i18n(`dc20rpg.skills.${actionId}`) +" Check",
                 type: "skillCheck"
             };
-            const data = {
-                type: "rollPrompt",
-                payload: {
-                    actorId: actorId,
-                    details: details,
-                    isToken: false,
-                    tokenId: null
-                }
-            };
-
-            game.dc20rpg.tools.rollPrompt(data, game.user.id)
+            game.dc20rpg.tools.promptRoll(this.actor, details)
         }
 
         _rollTradeSkill(event, actionId, actor) {
@@ -121,17 +101,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 label: coreModule.api.Utils.i18n(`dc20rpg.trades.${actionId}`) +" Check",
                 type: "skillCheck"
             };
-            const data = {
-                type: "rollPrompt",
-                payload: {
-                    actorId: actorId,
-                    details: details,
-                    isToken: false,
-                    tokenId: null
-                }
-            };
-
-            game.dc20rpg.tools.rollPrompt(data, game.user.id)
+            game.dc20rpg.tools.promptRoll(this.actor, details)
         }
     }
 })

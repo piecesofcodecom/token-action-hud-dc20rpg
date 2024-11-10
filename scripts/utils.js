@@ -3,12 +3,10 @@ import { MODULE } from './constants.js'
 export let Utils = null
 
 export function format_tooltip(original_str) {
-    console.warn("ORIGINAL",original_str);
     const pattern = /@\w+\[.*?\]\{(.*?)\}/g;
     let formatted_str = original_str.replace(pattern, '$1');
     // remove style
     formatted_str = formatted_str.replace(/style="[^"]*"/g, "");
-    console.warn("FINAL",formatted_str);
     return formatted_str;
 }
 

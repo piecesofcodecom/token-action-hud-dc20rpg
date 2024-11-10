@@ -1,5 +1,3 @@
-import { format_tooltip } from './utils.js'
-
 export const MODULE = {
     ID: "token-action-hud-dc20rpg"
 }

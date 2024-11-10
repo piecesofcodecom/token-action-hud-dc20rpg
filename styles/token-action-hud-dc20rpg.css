@@ -27,3 +27,11 @@
 		1px 1px 1px rgba(52, 52, 52, 1),
 		1px 1px 1px rgba(52, 52, 52, 1);
 }
+
+.info1_size {
+	width: 40px;
+}
+
+.info1_size_health {
+	width: 60px;
+}

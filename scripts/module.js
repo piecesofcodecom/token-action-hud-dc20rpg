@@ -35,8 +35,10 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
 
         async registerDefaults() {
             const GROUP = {
-                check:      {id: 'check', name: coreModule.api.Utils.i18n('DC20RPG.Check'), type: 'system' },
-                save:       {id: 'save', name: coreModule.api.Utils.i18n('DC20RPG.Save'), type: 'system' },
+                check:      {id: 'check', name: coreModule.api.Utils.i18n('dc20rpg.sheet.attributes.title') + " & " + coreModule.api.Utils.i18n('DC20RPG.Check'), type: 'system' },
+                save:       {id: 'save', name: coreModule.api.Utils.i18n('dc20rpg.sheet.attributes.title') + " & " + coreModule.api.Utils.i18n('DC20RPG.Save'), type: 'system' },
+                ocheck:     {id: 'ocheck', name: coreModule.api.Utils.i18n('dc20rpg.dialog.settings.nav.other') + " & " + coreModule.api.Utils.i18n('DC20RPG.Check'), type: 'system'},
+                osave:      {id: 'osave', name: coreModule.api.Utils.i18n('dc20rpg.dialog.settings.nav.other') + " & " + coreModule.api.Utils.i18n('DC20RPG.Save'), type: 'system'},
                 skills:     {id: 'skills', name: coreModule.api.Utils.i18n('dc20rpg.sheet.skills.skillsTitle'), type: 'system' },
                 knowledge:  {id: 'knowledge', name: coreModule.api.Utils.i18n('dc20rpg.sheet.skills.knowledgeTitle'), type: 'system' },
                 trade:      {id: 'trade', name: coreModule.api.Utils.i18n('dc20rpg.sheet.skills.tradeTitle'), type: 'system' },
@@ -46,12 +48,18 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                 cantrips:   { id: 'cantrips', name: coreModule.api.Utils.i18n('dc20rpg.sheet.cantrips.known'), type: 'system' },
                 conditions: { id: 'conditions', name: coreModule.api.Utils.i18n('dc20rpg.sheet.effects.conditions'), type: 'system'},
                 stamina:    { id: 'stamina', name: coreModule.api.Utils.i18n('dc20rpg.resource.stamina'), type: 'system' },
+                exhaustion: { id: 'exhaustion', name: coreModule.api.Utils.i18n('dc20rpg.conditions.exhaustion'), type: 'system' },
                 mana:       { id: 'mana', name: coreModule.api.Utils.i18n('dc20rpg.resource.mana'), type: 'system' },
                 grit:       { id: 'grit', name: coreModule.api.Utils.i18n('dc20rpg.resource.grit'), type: 'system' },
                 action:     { id: 'ap', name: coreModule.api.Utils.i18n('dc20rpg.resource.ap'), type: 'system' },
                 health:     { id: 'health', name: coreModule.api.Utils.i18n('dc20rpg.resource.health'), type: 'system' },
                 maneuvers:  { id: 'maneuvers', name: coreModule.api.Utils.i18n('dc20rpg.sheet.maneuvers.known'), type: 'system' },
-                techniques:  { id: 'techniques', name: coreModule.api.Utils.i18n('TYPES.Item.technique'), type: 'system' },
+                techniques: { id: 'techniques', name: coreModule.api.Utils.i18n('TYPES.Item.technique'), type: 'system' },
+                attacks:    { id: 'attacks', name: coreModule.api.Utils.i18n('dc20rpg.sheet.checkSave.attack'), type: 'system' },
+                defenses:   { id: 'defenses', name: "Defense", type: 'system' },
+                saves:      { id: 'saves', name: coreModule.api.Utils.i18n("dc20rpg.dialog.display.save"), type: 'system' },
+                doomed:     { id: 'doomed', name: coreModule.api.Utils.i18n('dc20rpg.sheet.doomed'), type: 'system' },
+                utils:      { id: 'utils', name: "Utilities", type: 'system' },
             }
             const groups = GROUP
             Object.values(groups).forEach(group => {
@@ -64,10 +72,12 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                     {
                         nestId: 'attributes',
                         id: 'attributes',
-                        name: coreModule.api.Utils.i18n('dc20rpg.sheet.attributes.title'),
+                        name: coreModule.api.Utils.i18n('dc20rpg.sheet.checkSave.title'),
                         groups: [
                             { ...groups.check, nestId: 'attributes_check' },
-                            { ...groups.save, nestId: 'attributes_save' }
+                            { ...groups.save, nestId: 'attributes_save' },
+                            { ...groups.ocheck, nestId: 'attributes_ocheck'},
+                            { ...groups.osave, nestId: 'attributes_osave'}
                         ]
                     },
                     {
@@ -108,6 +118,7 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                             { ...groups.grit, nestId: 'points_grit' },
                             { ...groups.action, nestId: 'points_ap' },
                             { ...groups.health, nestId: 'points_health' },
+                            {...groups.doomed,  nestId: 'points_doomed'}
                         ]
                     },
                     {
@@ -115,16 +126,27 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                         id: 'conditions',
                         name: coreModule.api.Utils.i18n('dc20rpg.sheet.effects.conditions'),
                         groups: [
+                            { ...groups.exhaustion, nestId: 'conditions_exhaustion'},
                             { ...groups.conditions, nestId: 'conditions_conditions' }
                         ]
                     },
                     {
                         nestId: 'maneuvers',
                         id: 'maneuvers',
-                        name: coreModule.api.Utils.i18n('dc20rpg.sheet.maneuvers.known'),
+                        name: coreModule.api.Utils.i18n('TYPES.Item.technique'),
                         groups: [
-                            { ...groups.maneuvers, nestId: 'maneuvers_maneuvers' },
-                            { ...groups.techniques, nestId: 'maneuvers_techniques' }
+                            { ...groups.attacks, nestId: 'maneuvers_attacks' },
+                            { ...groups.defenses, nestId: 'maneuvers_defenses' },
+                            { ...groups.saves, nestId: 'maneuvers_saves' },
+                            { ...groups.maneuvers, nestId: 'maneuvers_maneuvers' }
+                        ]
+                    },
+                    {
+                        nestId: 'utils',
+                        id: 'utils',
+                        name: "Extras",
+                        groups: [
+                            { ...groups.utils, nestId: 'utils_utils' }
                         ]
                     }
                     

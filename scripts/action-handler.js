@@ -20,24 +20,84 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
             if(["npc", "character"].includes(actor.type)) {
                 this._getAttributes({ id: 'save', type: 'system' });
                 this._getAttributes({ id: 'check', type: 'system' });
+                this.getOtherSaveChecks({ id: 'osave', type: 'system' });
+                this.getOtherSaveChecks({ id: 'ocheck', type: 'system' });
                 await this._getSkills({ id: 'skills', type: 'system' });
                 await this._getSkills({ id: 'knowledge', type: 'system' });
                 if (actor.type != "npc")
                     await this._getSkills({ id: 'trade', type: 'system' });
                 this._getItems({ id: 'weapons', type: 'system' }, "weapon");
                 this._getItems({ id: 'consumables', type: 'system' }, "consumable");
-                this._getTechniques({ id: 'maneuvers', type: 'system' }, "maneuver");
-                this._getTechniques({ id: 'techniques', type: 'system' }, "technique");
+                this._getTechniques({ id: 'attacks', type: 'system' }, "Attack");
+                this._getTechniques({ id: 'defenses', type: 'system' }, "Defense");
+                this._getTechniques({ id: 'saves', type: 'system' }, "Save");
+                this._getOtherTechniques({ id: 'maneuvers', type: 'system' }, ["Save","Attack", "Defense"]);
                 this._getSpells({ id: 'spells', type: 'system' }, "spell")
                 this._getSpells({ id: 'cantrips', type: 'system' }, "cantrip");
                 this._getPoints();
+                this._getDoomed({ id: 'doomed', type: 'system'});
                 this._getConditions({ id: 'conditions', type: 'system' });
+                this._getUtils({id: "utils", type: 'system'});
                 // TODO DC20RPG.actions
             }
         }
+        _getDoomed(parent) {
+            let actions = [];
+                actions.push({
+                    id: 'doomed',
+                    name: coreModule.api.Utils.i18n(`dc20rpg.sheet.doomed`),
+                    info1: { text: `${this.actor.system.death.doomed}` },
+                    info2: { text: `${this.actor.system.death.treshold}`},
+                    img: `${PATH_ASSETS}/exhaustion.svg`,
+                    tooltip: format_tooltip(coreModule.api.Utils.i18n(`dc20rpg.sheet.doomed`)),
+                    encodedValue: ['doomed', 'mouse'].join(this.delimiter)
+                
+                })
+                actions.push({
+                    id:`doomedAll`,
+                    icon1: '<i class="fa-solid fa-arrows-rotate"></i>',
+                    tooltip: "Reset",
+                    encodedValue: ['doomed', 'all'].join(this.delimiter)   
+                })
+            
+            this.addActions(actions, parent);
+
+        }
+        _getUtils(parent) {
+            const actions = [];
+            actions.push({
+                id: "initiative",
+                img: `${PATH_ASSETS}/d20.svg`,
+                name: "Initiative",
+
+                cssClass: this.actor.flags.dc20rpg.rollMenu.initiative ? "toggle active" : "toggle",
+                tooltip: coreModule.api.Utils.i18n("dc20rpg.sheet.rollMenu.initiative.inactive"),
+                encodedValue: ["initiative","initiative"].join(this.delimiter)
+            })
+            
+            actions.push({
+                id: "rest",
+                img: `${PATH_ASSETS}/rest.svg`,
+                name: coreModule.api.Utils.i18n("dc20rpg.sheet.rest"),
+                cssClass: "rest",
+                tooltip: coreModule.api.Utils.i18n("dc20rpg.sheet.rest"),
+                encodedValue: ["rest","rest"].join(this.delimiter)
+            })
+
+            actions.push({
+                id: "flat",
+                img: `${PATH_ASSETS}/d20.svg`,
+                name: coreModule.api.Utils.i18n("dc20rpg.sheet.rollMenu.flat"),
+                tooltip: coreModule.api.Utils.i18n("dc20rpg.sheet.rollMenu.flat"),
+                encodedValue: ["flat","flat"].join(this.delimiter)
+            })
+            this.addActions(actions, parent);
+            
+        }
         _getItems(parent, itemtype) {
             let items = []
-            let item_list = this.actor.items.filter(i => i.type === itemtype)
+            let item_list = this.actor.items.filter(i => i.type === itemtype);
+
             item_list.forEach(el => {
                 let element = {
                     id: el.id,
@@ -46,22 +106,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                     tooltip: format_tooltip(el.system.description),
                     encodedValue: [parent.id, el.id].join(this.delimiter)
                 }
-                if ( ["weapon"].includes(el.type) ) {
-                    console.warn(el)
-                    const formulas =  Object.keys(el.system.formulas)
-                    let dmg_type = ""
-                    let dmg_value = ""
-                    for (let formula of formulas) {
-                        dmg_type = el.system.formulas[formula].type;
-                        dmg_value = el.system.formulas[formula].formula;
-                    }
-                    
-                    element.info1 = { text: dmg_value }
-                    element.info2 = {text:  dmg_type}
-                    
-
-                    
-                } else if (el.type == 'consumable') {
+                if (el.type == 'consumable') {
                     if (el.system.costs.charges.max != null) {
                         element.info1 = { text: el.system.costs.charges.current +"/"+el.system.costs.charges.max }
 
@@ -74,10 +119,10 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
             })
             this.addActions(items, parent);
         }
-
         async _getTechniques(parent, type) {
             let items = []
-            let item_list = this.actor.items.filter(i => i.type === "technique" && i.system.techniqueType == type);
+            const item_list = this.actor.items.filter(i => i.type === "technique" && i.system.techniqueOrigin == type);
+            const current_items = [];
             item_list.forEach(el => {
                 let element = {
                     id: el.id,
@@ -86,11 +131,32 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                     tooltip: format_tooltip(el.system.description),
                     encodedValue: [parent.id, el.id].join(this.delimiter)
                 }
-                items.push(element)
+                if (!current_items.includes(el.name)) {
+                    items.push(element)
+                    current_items.push(el.name)
+                }
             })
             this.addActions(items, parent)
         }
-
+        async _getOtherTechniques(parent, type) {
+            let items = []
+            const item_list = this.actor.items.filter(i => i.type === "technique" && !type.includes(i.system.techniqueOrigin));
+            const current_items = [];
+            item_list.forEach(el => {
+                let element = {
+                    id: el.id,
+                    img: el.img,
+                    name: el.name,
+                    tooltip: format_tooltip(el.system.description),
+                    encodedValue: [parent.id, el.id].join(this.delimiter)
+                }
+                if (!current_items.includes(el.name)) {
+                    items.push(element)
+                    current_items.push(el.name)
+                }
+            })
+            this.addActions(items, parent)
+        }
         _getSpells(parent, spellType) {
             let items = []
             let item_list = this.actor.items.filter(i => i.type === "spell" && i.system.spellType == spellType);
@@ -138,7 +204,79 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                     })
                 }
             }
-            console.warn(actions)
+            this.addActions(actions, parent);
+        }
+
+        getOtherSaveChecks(parent) {
+            let actions = [];
+            if (parent.id == "ocheck") {
+                const other_checks = ["attack"]
+                actions.push({
+                    id: "attack",
+                    name: coreModule.api.Utils.i18n("dc20rpg.sheet.checkSave.attackCheckTitle"),
+                    img: PATH_ASSETS + "/attack.svg",
+                    info1: { text: Number(this.actor.system.attackMod.value.martial) >= 0 ? `+${this.actor.system.attackMod.value.martial}` : `${this.actor.system.attackMod.value.martial}` },
+                    encodedValue: ["attackMod", "martial"].join(this.delimiter),
+                })
+
+                actions.push({
+                    id: "spell",
+                    name: coreModule.api.Utils.i18n("dc20rpg.sheet.checkSave.spellCheckTitle"),
+                    img: PATH_ASSETS + "/arc.svg",
+                    info1: { text: Number(this.actor.system.attackMod.value.spell) >= 0 ? `+${this.actor.system.attackMod.value.spell}` : `${this.actor.system.attackMod.value.spell}` },
+                    encodedValue: ["attackMod", "spell"].join(this.delimiter),
+                })
+                actions.push({
+                    id: "martial",
+                    name: coreModule.api.Utils.i18n("dc20rpg.sheet.rollMenu.martialTitle"),
+                    img: PATH_ASSETS + "/mar.svg",
+                    info1: { text: Number(this.actor.system.special.marCheck) >= 0 ? `+${this.actor.system.special.marCheck}` : `${this.actor.system.special.marCheck}` },
+                    encodedValue: ["attackMod", "marCheck"].join(this.delimiter),
+                })
+            } else {
+                let details = {
+                    checkKey:"men",
+                    roll: "d20+@special.menSave",
+                    label: coreModule.api.Utils.i18n("dc20rpg.sheet.rollMenu.menSave"),
+                    tooltip: coreModule.api.Utils.i18n("dc20rpg.sheet.rollMenu.menSave"),
+                    info1: { text: this.actor.system.special.menSave >= 0 ? `+${this.actor.system.special.menSave}` : `${this.actor.system.special.menSave}`},
+                    type: "save",
+                    img: PATH_ASSETS + "/men.svg",
+                };
+
+                let action = {
+                    id: details.checkKey,
+                    name: details.label,
+                    img: details.img,
+                    tooltip: format_tooltip(details.tooltip),
+                    encodedValue: ["promptRoll", JSON.stringify(details)].join(this.delimiter),
+                }
+                if (details.info1) {
+                    action.info1 = details.info1;
+                }
+                actions.push(action)
+                details = {
+                    checkKey:"phy",
+                    roll: "d20+@special.phySave",
+                    label: coreModule.api.Utils.i18n("dc20rpg.sheet.rollMenu.phySave"),
+                    tooltip: coreModule.api.Utils.i18n("dc20rpg.sheet.rollMenu.phySave"),
+                    info1: { text: this.actor.system.special.phySave >= 0 ? `+${this.actor.system.special.phySave}` : `${this.actor.system.special.phySave}`},
+                    type: "save",
+                    img: PATH_ASSETS + "/phy.svg",
+                };
+
+                action = {
+                    id: details.checkKey,
+                    name: details.label,
+                    img: details.img,
+                    tooltip: format_tooltip(details.tooltip),
+                    encodedValue: ["promptRoll", JSON.stringify(details)].join(this.delimiter),
+                }
+                if (details.info1) {
+                    action.info1 = details.info1;
+                }
+                actions.push(action)
+            }
             this.addActions(actions, parent);
         }
         _getAttributes(parent) {
@@ -163,39 +301,47 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
         }
 
         _getPoints() {
-            ["stamina", "mana", "grit", "ap"].forEach(point => {
+            ["stamina", "mana", "grit", "ap", "health"].forEach(point => {
                 let actions = [];
                 let parent = {id: point, type: "system"}
                 if ( this.actor.system.resources[point].max > 0) {
+                    const right_text = point == "ap" ? coreModule.api.Utils.i18n('dc20rpg.sheet.resource.useAp') : coreModule.api.Utils.i18n(`dc20rpg.sheet.resource.spend${capitalizeFirstLetter(point)}`);
+                    const tooltip = `
+                        <p><b>Left click</b>: ${coreModule.api.Utils.i18n(`dc20rpg.sheet.resource.regain${capitalizeFirstLetter(point)}`)}</p>
+                        <p><b>Right click</b>: ${right_text}</p>
+                    `
+                    let info1 = { text: `${this.actor.system.resources[point].value} / ${this.actor.system.resources[point].max}`, class: "info1_size" };
+                    let info2 = { text: "" }
+                    if (point == "health") {
+                        let temphp = this.actor.system.resources.health.temp;
+                        let hp_current =  this.actor.system.resources[point].value;
+                        if (temphp) {
+                            hp_current -= temphp;
+                        } else {
+                            temphp = 0;
+                        }
+                        info1.text = `${hp_current} / ${this.actor.system.resources[point].max}`;
+                        info2.text =  `${temphp}`;
+                        
+                    }
                     actions.push({
                         id:`${point}`,
-                        icon1: `<i class="fa-solid fa-${this.actor.system.resources[point].value}"></i>`,
-                        tooltip: format_tooltip("Current "+coreModule.api.Utils.i18n(`dc20rpg.resource.${point}`)),
-                        encodedValue: [point, ''].join(this.delimiter)
+                        name: coreModule.api.Utils.i18n(`dc20rpg.resource.${point}`),
+                        info1: info1,
+                        info2: info2,
+                        img: point == "ap" ? `${PATH_ASSETS}/${point}.svg` : `systems/dc20rpg/images/sheet/header/${point}.svg`,
+                        tooltip: format_tooltip(tooltip),
+                        encodedValue: [point, 'mouse'].join(this.delimiter)
                     
                     })
-                    actions.push({
-                        id:`${point}Add`,
-                        icon1: '<i class="fa fa-plus" aria-hidden="true"></i>',
-                        tooltip: format_tooltip(coreModule.api.Utils.i18n(`dc20rpg.sheet.resource.regain${capitalizeFirstLetter(point)}`)),
-                        encodedValue: [point, 'add'].join(this.delimiter)
-                    
-                    })
-                    actions.push({
-                        id:`${point}Remove`,
-                        icon1: '<i class="fa fa-minus" aria-hidden="true"></i>',
-                        tooltip: point == "ap" ? coreModule.api.Utils.i18n('dc20rpg.sheet.resource.useAp') : coreModule.api.Utils.i18n(`dc20rpg.sheet.resource.spend${capitalizeFirstLetter(point)}`),
-                        encodedValue: [point, 'remove'].join(this.delimiter)   
-                    })
-
                     actions.push({
                         id:`${point}All`,
                         icon1: '<i class="fa-solid fa-arrows-rotate"></i>',
                         tooltip: coreModule.api.Utils.i18n('dc20rpg.sheet.resource.regainAllAp'),
                         encodedValue: [point, 'all'].join(this.delimiter)   
                     })
-                    this.addActions(actions, parent);
                 }
+                this.addActions(actions, parent);
             })
         }
         _getConditions(parent) {
@@ -205,14 +351,26 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 let action =  {
                     id: _status.id,
                     name: _status.label,
-                    cssClass: this.actor.statuses.filter(i => i.id ==_status.id).size > 0 ? "toggle active" : "togle",
+                    cssClass: this.actor.statuses.filter(i => i.id ==_status.id).size > 0 ? "toggle active" : "toggle",
                     img: _status.img,
                     tooltip: format_tooltip(_status.description),
                     encodedValue: ['statuses', _status.id].join(this.delimiter)
                 }
-                actions.push(action)
+                this.addActions([action], parent);
             })
-            this.addActions(actions, parent); 
+            const tooltip = `
+            <p>Left click: increase the ${coreModule.api.Utils.i18n("dc20rpg.sheet.exhaustion")}</p>
+            <p>Right click: Decrease the ${coreModule.api.Utils.i18n("dc20rpg.sheet.exhaustion")}</p>
+            `
+            actions.push({
+                id: "exhaustion",
+                img: this.actor.system.exhaustion < 6 ? `${PATH_ASSETS}/exhaustion.svg` : `${PATH_ASSETS}/exhaustion-full.svg`,
+                name: coreModule.api.Utils.i18n("dc20rpg.sheet.exhaustion"),
+                info1: { text: `${this.actor.system.exhaustion}` },
+                tooltip: tooltip,
+                encodedValue: ["exhaustion","exhaustion"].join(this.delimiter)
+            })
+            this.addActions(actions, {id: 'exhaustion', type: 'system'});
         }
     }
 })

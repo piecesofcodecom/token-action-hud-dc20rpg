@@ -72,7 +72,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                     break;
                 case 'doomed':
                     const new_value = event.type == "click" ? (this.actor.system.death.doomed + 1 ) : (this.actor.system.death.doomed - 1);
-                    if (new_value > 0 && actionId != "all") {
+                    if (new_value >= 0 && actionId != "all") {
                         this.actor.update({[`system.death.doomed`] : new_value});
                     } else if (actionId == "all") {
                         this.actor.update({[`system.death.doomed`] : 0});

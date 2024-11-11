@@ -59,7 +59,16 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                 defenses:   { id: 'defenses', name: "Defense", type: 'system' },
                 saves:      { id: 'saves', name: coreModule.api.Utils.i18n("dc20rpg.dialog.display.save"), type: 'system' },
                 doomed:     { id: 'doomed', name: coreModule.api.Utils.i18n('dc20rpg.sheet.doomed'), type: 'system' },
+                fclass:     { id: 'feature_class', name: coreModule.api.Utils.i18n('TYPES.Item.class'), type: 'system' },
+                fother:     { id: 'feature_other', name: coreModule.api.Utils.i18n('dc20rpg.dialog.settings.nav.other'), type: 'system' },
+                fancestry:  { id: 'feature_ancestry', name: coreModule.api.Utils.i18n('TYPES.Item.ancestry'), type: 'system' },
+                effects:    { id: 'effects', name: coreModule.api.Utils.i18n('dc20rpg.effect.sheet.effectsTab'), type: 'system' },
                 utils:      { id: 'utils', name: "Utilities", type: 'system' },
+                offensive:  { id: 'actions_offensive', name: "Offensive", type: 'system' },
+                defensive:  { id: 'actions_defensive', name: "Defensive", type: 'system' },
+                utility:    { id: "actions_utility", name: "Utility", type: "system"},
+                reaction:   { id: "actions_reaction", name: "Reaction", type: "system"},
+                skillBased: { id: "actions_skillBased", name: "Skill Based", type: "system"},
             }
             const groups = GROUP
             Object.values(groups).forEach(group => {
@@ -88,6 +97,18 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                             { ...groups.skills, nestId: 'skills_skills' },
                             { ...groups.trade, nestId: 'skills_trade' },
                             { ...groups.knowledge, nestId: 'skills_knowledge' }
+                        ]
+                    },
+                    {
+                        nestId: 'actions',
+                        id: 'actions',
+                        name: "Actions",
+                        groups: [
+                            { ...groups.offensive, nestId: 'actions_offensive' },
+                            { ...groups.defensive, nestId: 'actions_defensive' },
+                            { ...groups.utility, nestId: 'actions_utility' },
+                            { ...groups.reaction, nestId: 'actions_reaction' },
+                            { ...groups.skillBased, nestId: 'actions_skillBased' },
                         ]
                     },
                     {
@@ -139,6 +160,24 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                             { ...groups.defenses, nestId: 'maneuvers_defenses' },
                             { ...groups.saves, nestId: 'maneuvers_saves' },
                             { ...groups.maneuvers, nestId: 'maneuvers_maneuvers' }
+                        ]
+                    },
+                    {
+                        nestId: 'features',
+                        id: 'features',
+                        name: "Features",
+                        groups: [
+                            { ...groups.fclass, nestId: 'features_class' },
+                            { ...groups.fother, nestId: 'features_other' },
+                            { ...groups.fancestry, nestId: "features_ancestry"}
+                        ]
+                    },
+                    {
+                        nestId: 'effects',
+                        id: 'effects',
+                        name: "Effects",
+                        groups: [
+                            { ...groups.effects, nestId: 'effects_effects' }
                         ]
                     },
                     {

@@ -1,5 +1,6 @@
 import { PATH_ASSETS } from './constants.js'
 import { format_tooltip } from './utils.js'
+import { getActions, action_list } from './actions.js'
 export let DC20ActionHandler = null
 
 function capitalizeFirstLetter(word) {
@@ -38,7 +39,67 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 this._getDoomed({ id: 'doomed', type: 'system'});
                 this._getConditions({ id: 'conditions', type: 'system' });
                 this._getUtils({id: "utils", type: 'system'});
+                this._getFeatures({id: 'features', type: 'system'});
+                //this._getSpecificFeatures({id: 'attacks', type: 'system'}, 'attack');
+                this._getEffects({id: 'effects', type: 'system'});
+                await this._getAllActions({id: 'actions', type: 'system'});
                 // TODO DC20RPG.actions
+            }
+        }
+        async _getAllActions(parent) {
+            const keys = Object.keys(action_list);
+
+            for (let category of keys) {
+                action_list[category].forEach(async action => {
+                    const page = await fromUuid(CONFIG.DC20RPG.actionsJournalUuid[action]);
+                    this.addActions([{
+                        id: action,
+                        img: getActions()[action].img,
+                        name: getActions()[action].name,
+                        //cssClass: !effect.disabled ? "toggle active" : "toggle",
+                        tooltip: page ? format_tooltip(page.text.content) : getActions()[action].name,
+                        encodedValue: ["action",action].join(this.delimiter)
+                    }],{ id: "actions_"+category, type: "system"})
+    
+                });
+            }
+        }
+        _getEffects(parent) {
+            const effects = Array.from(this.actor.effects);
+            const actions = [];
+            for (let effect of effects) {
+                if ((CONFIG.statusEffects.filter(el => el.name == effect.name)).length == 0) {
+                    actions.push({
+                        id: effect.id,
+                        img: effect.img,
+                        name: effect.name,
+                        cssClass: !effect.disabled ? "toggle active" : "toggle",
+                        tooltip: coreModule.api.Utils.i18n(effect.description),
+                        encodedValue: ["effect",effect.id].join(this.delimiter)
+                    });
+                }
+
+            }
+            this.addActions(actions, parent);
+        }
+        _getFeatures(parent) {
+            const features = (this.actor.items.filter(el => el.type == "feature" && !["attack"].includes(el.system.actionType)))
+
+            for(let feature of features) {
+                let group = "feature_";
+                if (feature.system.featureType.length > 0) {
+                    group = 'feature_'+feature.system.featureType;
+                } else {
+                    group = 'feature_other';
+                }
+                this.addActions([{
+                    id: feature.id,
+                    name: feature.name,
+                    img: feature.img,
+                    tooltip: format_tooltip(feature.system.description),
+                    encodedValue: ['item', feature.id].join(this.delimiter)
+                
+                }], {id: group, type: 'system'});
             }
         }
         _getDoomed(parent) {

@@ -87,6 +87,9 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                     };
                     game.dc20rpg.tools.promptRoll(this.actor, flat_roll)
                     break;
+                case "action":
+                    //game.dc20rpg.tools.promptActionRoll(this.actor, actionId)
+                    break;
             }
         }
         _updatePoints(event, item, action) {

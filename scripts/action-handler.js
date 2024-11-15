@@ -18,13 +18,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
             const actor = this.actor;
             if (!actor) return;
             
-            if(["npc", "character"].includes(actor.type)) {
-                this._getAttributes({ id: 'save', type: 'system' });
-                this._getAttributes({ id: 'check', type: 'system' });
-                this.getOtherSaveChecks({ id: 'osave', type: 'system' });
-                this.getOtherSaveChecks({ id: 'ocheck', type: 'system' });
-                await this._getSkills({ id: 'skills', type: 'system' });
-                await this._getSkills({ id: 'knowledge', type: 'system' });
+            if(["npc", "character"].includes(actor.type)) {                
                 if (actor.type != "npc")
                     await this._getSkills({ id: 'trade', type: 'system' });
                 this._getItems({ id: 'weapons', type: 'system' }, "weapon");
@@ -35,16 +29,26 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 this._getOtherTechniques({ id: 'maneuvers', type: 'system' }, ["Save","Attack", "Defense"]);
                 this._getSpells({ id: 'spells', type: 'system' }, "spell")
                 this._getSpells({ id: 'cantrips', type: 'system' }, "cantrip");
-                this._getPoints();
+                
                 this._getDoomed({ id: 'doomed', type: 'system'});
-                this._getConditions({ id: 'conditions', type: 'system' });
+                
                 this._getUtils({id: "utils", type: 'system'});
-                this._getFeatures({id: 'features', type: 'system'});
+                
                 //this._getSpecificFeatures({id: 'attacks', type: 'system'}, 'attack');
-                this._getEffects({id: 'effects', type: 'system'});
+                
                 await this._getAllActions({id: 'actions', type: 'system'});
                 // TODO DC20RPG.actions
             }
+            await this._getSkills({ id: 'skills', type: 'system' });
+            await this._getSkills({ id: 'knowledge', type: 'system' });
+            this._getAttributes({ id: 'save', type: 'system' });
+            this._getAttributes({ id: 'check', type: 'system' });
+            this._getConditions({ id: 'conditions', type: 'system' });
+            this._getEffects({id: 'effects', type: 'system'});
+            this.getOtherSaveChecks({ id: 'osave', type: 'system' });
+            this.getOtherSaveChecks({ id: 'ocheck', type: 'system' });
+            this._getPoints();
+            this._getFeatures({id: 'features', type: 'system'});
         }
         async _getAllActions(parent) {
             const keys = Object.keys(action_list);

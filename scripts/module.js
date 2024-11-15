@@ -35,40 +35,40 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
 
         async registerDefaults() {
             const GROUP = {
-                check:      {id: 'check', name: coreModule.api.Utils.i18n('dc20rpg.sheet.attributes.title') + " & " + coreModule.api.Utils.i18n('DC20RPG.Check'), type: 'system' },
-                save:       {id: 'save', name: coreModule.api.Utils.i18n('dc20rpg.sheet.attributes.title') + " & " + coreModule.api.Utils.i18n('DC20RPG.Save'), type: 'system' },
-                ocheck:     {id: 'ocheck', name: coreModule.api.Utils.i18n('dc20rpg.dialog.settings.nav.other') + " & " + coreModule.api.Utils.i18n('DC20RPG.Check'), type: 'system'},
-                osave:      {id: 'osave', name: coreModule.api.Utils.i18n('dc20rpg.dialog.settings.nav.other') + " & " + coreModule.api.Utils.i18n('DC20RPG.Save'), type: 'system'},
-                skills:     {id: 'skills', name: coreModule.api.Utils.i18n('dc20rpg.sheet.skills.skillsTitle'), type: 'system' },
-                knowledge:  {id: 'knowledge', name: coreModule.api.Utils.i18n('dc20rpg.sheet.skills.knowledgeTitle'), type: 'system' },
-                trade:      {id: 'trade', name: coreModule.api.Utils.i18n('dc20rpg.sheet.skills.tradeTitle'), type: 'system' },
-                weapons:    { id: 'weapons', name: coreModule.api.Utils.i18n('TYPES.Item.weapon'), type: 'system' },
-                consumables:{ id: 'consumables', name: coreModule.api.Utils.i18n('TYPES.Item.consumable'), type: 'system' },
-                spells:     { id: 'spells', name: coreModule.api.Utils.i18n('dc20rpg.sheet.nav.spells'), type: 'system' },
-                cantrips:   { id: 'cantrips', name: coreModule.api.Utils.i18n('dc20rpg.sheet.cantrips.known'), type: 'system' },
-                conditions: { id: 'conditions', name: coreModule.api.Utils.i18n('dc20rpg.sheet.effects.conditions'), type: 'system'},
-                stamina:    { id: 'stamina', name: coreModule.api.Utils.i18n('dc20rpg.resource.stamina'), type: 'system' },
-                exhaustion: { id: 'exhaustion', name: coreModule.api.Utils.i18n('dc20rpg.conditions.exhaustion'), type: 'system' },
-                mana:       { id: 'mana', name: coreModule.api.Utils.i18n('dc20rpg.resource.mana'), type: 'system' },
-                grit:       { id: 'grit', name: coreModule.api.Utils.i18n('dc20rpg.resource.grit'), type: 'system' },
-                action:     { id: 'ap', name: coreModule.api.Utils.i18n('dc20rpg.resource.ap'), type: 'system' },
-                health:     { id: 'health', name: coreModule.api.Utils.i18n('dc20rpg.resource.health'), type: 'system' },
-                maneuvers:  { id: 'maneuvers', name: coreModule.api.Utils.i18n('dc20rpg.sheet.maneuvers.known'), type: 'system' },
-                techniques: { id: 'techniques', name: coreModule.api.Utils.i18n('TYPES.Item.technique'), type: 'system' },
-                attacks:    { id: 'attacks', name: coreModule.api.Utils.i18n('dc20rpg.sheet.checkSave.attack'), type: 'system' },
-                defenses:   { id: 'defenses', name: "Defense", type: 'system' },
-                saves:      { id: 'saves', name: coreModule.api.Utils.i18n("dc20rpg.dialog.display.save"), type: 'system' },
-                doomed:     { id: 'doomed', name: coreModule.api.Utils.i18n('dc20rpg.sheet.doomed'), type: 'system' },
-                fclass:     { id: 'feature_class', name: coreModule.api.Utils.i18n('TYPES.Item.class'), type: 'system' },
-                fother:     { id: 'feature_other', name: coreModule.api.Utils.i18n('dc20rpg.dialog.settings.nav.other'), type: 'system' },
-                fancestry:  { id: 'feature_ancestry', name: coreModule.api.Utils.i18n('TYPES.Item.ancestry'), type: 'system' },
-                effects:    { id: 'effects', name: coreModule.api.Utils.i18n('dc20rpg.effect.sheet.effectsTab'), type: 'system' },
-                utils:      { id: 'utils', name: "Utilities", type: 'system' },
-                offensive:  { id: 'actions_offensive', name: "Offensive", type: 'system' },
-                defensive:  { id: 'actions_defensive', name: "Defensive", type: 'system' },
-                utility:    { id: "actions_utility", name: "Utility", type: "system"},
-                reaction:   { id: "actions_reaction", name: "Reaction", type: "system"},
-                skillBased: { id: "actions_skillBased", name: "Skill Based", type: "system"},
+                check:      {id: 'check', name: coreModule.api.Utils.i18n('dc20rpg.sheet.attributes.title') + " & " + coreModule.api.Utils.i18n('DC20RPG.Check'), type: 'system', settings: {collapse: false}  },
+                save:       {id: 'save', name: coreModule.api.Utils.i18n('dc20rpg.sheet.attributes.title') + " & " + coreModule.api.Utils.i18n('DC20RPG.Save'), type: 'system', settings: {collapse: false}  },
+                ocheck:     {id: 'ocheck', name: coreModule.api.Utils.i18n('dc20rpg.dialog.settings.nav.other') + " & " + coreModule.api.Utils.i18n('DC20RPG.Check'), type: 'system', settings: {collapse: false} },
+                osave:      {id: 'osave', name: coreModule.api.Utils.i18n('dc20rpg.dialog.settings.nav.other') + " & " + coreModule.api.Utils.i18n('DC20RPG.Save'), type: 'system', settings: {collapse: false} },
+                skills:     {id: 'skills', name: coreModule.api.Utils.i18n('dc20rpg.sheet.skills.skillsTitle'), type: 'system', settings: {collapse: false}  },
+                knowledge:  {id: 'knowledge', name: coreModule.api.Utils.i18n('dc20rpg.sheet.skills.knowledgeTitle'), type: 'system', settings: {collapse: false}  },
+                trade:      {id: 'trade', name: coreModule.api.Utils.i18n('dc20rpg.sheet.skills.tradeTitle'), type: 'system', settings: {collapse: false}  },
+                weapons:    { id: 'weapons', name: coreModule.api.Utils.i18n('TYPES.Item.weapon'), type: 'system', settings: {collapse: false}  },
+                consumables:{ id: 'consumables', name: coreModule.api.Utils.i18n('TYPES.Item.consumable'), type: 'system', settings: {collapse: false}  },
+                spells:     { id: 'spells', name: coreModule.api.Utils.i18n('dc20rpg.sheet.nav.spells'), type: 'system', settings: {collapse: false}  },
+                cantrips:   { id: 'cantrips', name: coreModule.api.Utils.i18n('dc20rpg.sheet.cantrips.known'), type: 'system', settings: {collapse: false}  },
+                conditions: { id: 'conditions', name: coreModule.api.Utils.i18n('dc20rpg.sheet.effects.conditions'), type: 'system', settings: {collapse: false} },
+                stamina:    { id: 'stamina', name: coreModule.api.Utils.i18n('dc20rpg.resource.stamina'), type: 'system', settings: {collapse: false}  },
+                exhaustion: { id: 'exhaustion', name: coreModule.api.Utils.i18n('dc20rpg.conditions.exhaustion'), type: 'system', settings: {collapse: false}  },
+                mana:       { id: 'mana', name: coreModule.api.Utils.i18n('dc20rpg.resource.mana'), type: 'system', settings: {collapse: false}  },
+                grit:       { id: 'grit', name: coreModule.api.Utils.i18n('dc20rpg.resource.grit'), type: 'system', settings: {collapse: false}  },
+                action:     { id: 'ap', name: coreModule.api.Utils.i18n('dc20rpg.resource.ap'), type: 'system', settings: {collapse: false}  },
+                health:     { id: 'health', name: coreModule.api.Utils.i18n('dc20rpg.resource.health'), type: 'system', settings: {collapse: false}  },
+                maneuvers:  { id: 'maneuvers', name: coreModule.api.Utils.i18n('dc20rpg.sheet.maneuvers.known'), type: 'system', settings: {collapse: false}  },
+                techniques: { id: 'techniques', name: coreModule.api.Utils.i18n('TYPES.Item.technique'), type: 'system', settings: {collapse: false}  },
+                attacks:    { id: 'attacks', name: coreModule.api.Utils.i18n('dc20rpg.sheet.checkSave.attack'), type: 'system', settings: {collapse: false}  },
+                defenses:   { id: 'defenses', name: "Defense", type: 'system', settings: {collapse: false}  },
+                saves:      { id: 'saves', name: coreModule.api.Utils.i18n("dc20rpg.dialog.display.save"), type: 'system', settings: {collapse: false}  },
+                doomed:     { id: 'doomed', name: coreModule.api.Utils.i18n('dc20rpg.sheet.doomed'), type: 'system', settings: {collapse: false}  },
+                fclass:     { id: 'feature_class', name: coreModule.api.Utils.i18n('TYPES.Item.class'), type: 'system', settings: {collapse: false}  },
+                fother:     { id: 'feature_other', name: coreModule.api.Utils.i18n('dc20rpg.dialog.settings.nav.other'), type: 'system', settings: {collapse: false}  },
+                fancestry:  { id: 'feature_ancestry', name: coreModule.api.Utils.i18n('TYPES.Item.ancestry'), type: 'system', settings: {collapse: false}  },
+                effects:    { id: 'effects', name: coreModule.api.Utils.i18n('dc20rpg.effect.sheet.effectsTab'), type: 'system', settings: {collapse: false}  },
+                utils:      { id: 'utils', name: "Utilities", type: 'system', settings: {collapse: false}  },
+                offensive:  { id: 'actions_offensive', name: "Offensive", type: 'system', settings: {collapse: false}  },
+                defensive:  { id: 'actions_defensive', name: "Defensive", type: 'system', settings: {collapse: false}  },
+                utility:    { id: "actions_utility", name: "Utility", type: "system", settings: {collapse: false} },
+                reaction:   { id: "actions_reaction", name: "Reaction", type: "system", settings: {collapse: false} },
+                skillBased: { id: "actions_skillBased", name: "Skill Based", type: "system", settings: {collapse: false} },
             }
             const groups = GROUP
             Object.values(groups).forEach(group => {
@@ -87,7 +87,12 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                             { ...groups.save, nestId: 'attributes_save' },
                             { ...groups.ocheck, nestId: 'attributes_ocheck'},
                             { ...groups.osave, nestId: 'attributes_osave'}
-                        ]
+                        ],
+                        settings: {
+                            image: "icons/sundries/gaming/dice-pair-white-green.webp",
+                            collapse: false,
+                            style: "list"
+                        }
                     },
                     {
                         nestId: 'skills',
@@ -97,7 +102,12 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                             { ...groups.skills, nestId: 'skills_skills' },
                             { ...groups.trade, nestId: 'skills_trade' },
                             { ...groups.knowledge, nestId: 'skills_knowledge' }
-                        ]
+                        ],
+                        image: "icons/environment/people/archer.webp",
+                        settings: {
+                            image: "icons/environment/people/archer.webp",
+                            collapse: false
+                        }
                     },
                     {
                         nestId: 'actions',
@@ -109,7 +119,11 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                             { ...groups.utility, nestId: 'actions_utility' },
                             { ...groups.reaction, nestId: 'actions_reaction' },
                             { ...groups.skillBased, nestId: 'actions_skillBased' },
-                        ]
+                        ],
+                        settings: {
+                            image: "icons/skills/movement/arrow-upward-white.webp",
+                            collapse: false
+                        }
                     },
                     {
                         nestId: 'weapons',
@@ -118,7 +132,11 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                         groups: [
                             { ...groups.weapons, nestId: 'weapons_weapons' },
                             { ...groups.consumables, nestId: 'weapons_consumables' }
-                        ]
+                        ],
+                        settings: {
+                            image: "icons/containers/bags/case-leather-tan.webp",
+                            collapse: false
+                        }
                     },
                     {
                         nestId: 'spells',
@@ -127,7 +145,11 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                         groups: [
                             { ...groups.cantrips, nestId: 'spells_cantrips' },
                             { ...groups.spells, nestId: 'spells_spells' },
-                        ]
+                        ],
+                        settings: {
+                            image: "icons/magic/symbols/rune-sigil-black-pink.webp",
+                            collapse: false
+                        }
                     },
                     {
                         nestId: 'points',
@@ -140,7 +162,11 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                             { ...groups.action, nestId: 'points_ap' },
                             { ...groups.health, nestId: 'points_health' },
                             {...groups.doomed,  nestId: 'points_doomed'}
-                        ]
+                        ],
+                        settings: {
+                            image: "icons/sundries/gaming/chess-pawn-white-glass.webp",
+                            collapse: false
+                        }
                     },
                     {
                         nestId: 'conditions',
@@ -149,7 +175,11 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                         groups: [
                             { ...groups.exhaustion, nestId: 'conditions_exhaustion'},
                             { ...groups.conditions, nestId: 'conditions_conditions' }
-                        ]
+                        ],
+                        settings: {
+                            image: "icons/skills/wounds/injury-face-impact-orange.webp",
+                            collapse: false
+                        }
                     },
                     {
                         nestId: 'maneuvers',
@@ -160,7 +190,11 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                             { ...groups.defenses, nestId: 'maneuvers_defenses' },
                             { ...groups.saves, nestId: 'maneuvers_saves' },
                             { ...groups.maneuvers, nestId: 'maneuvers_maneuvers' }
-                        ]
+                        ],
+                        settings: {
+                            image: "icons/skills/movement/feet-winged-sandals-tan.webp",
+                            collapse: false
+                        }
                     },
                     {
                         nestId: 'features',
@@ -170,7 +204,11 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                             { ...groups.fclass, nestId: 'features_class' },
                             { ...groups.fother, nestId: 'features_other' },
                             { ...groups.fancestry, nestId: "features_ancestry"}
-                        ]
+                        ],
+                        settings: {
+                            image: "icons/sundries/flags/banner-symbol-eye-purple.webp",
+                            collapse: false
+                        }
                     },
                     {
                         nestId: 'effects',
@@ -178,7 +216,11 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                         name: "Effects",
                         groups: [
                             { ...groups.effects, nestId: 'effects_effects' }
-                        ]
+                        ],
+                        settings: {
+                            image: "icons/sundries/misc/hourglass-wood.webp",
+                            collapse: false
+                        }
                     },
                     {
                         nestId: 'utils',
@@ -186,7 +228,11 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                         name: "Extras",
                         groups: [
                             { ...groups.utils, nestId: 'utils_utils' }
-                        ]
+                        ],
+                        settings: {
+                            image: "icons/sundries/flags/banner-silver-white.webp",
+                            collapse: false
+                        }
                     }
                     
                 ],

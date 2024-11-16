@@ -49,6 +49,63 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
             this.getOtherSaveChecks({ id: 'ocheck', type: 'system' });
             this._getPoints();
             this._getFeatures({id: 'features', type: 'system'});
+
+            if (["npc","companion"].includes(actor.type)) {
+                this._getResistence({id: 'resistence', type: 'system'})
+            }
+        }
+
+        _getResistence(parent) {
+            const iconTypes = {
+                immune: '<i class="fa-lg fa-solid fa-shield"></i>',
+                vulnerability: '<i class="fa-lg fa-solid fa-heart-crack"></i>',
+                resistance: '<i class="fa-solid fa-lg fa-shield-halved"></i>'
+            }
+            const actions = [];
+            for (let [key, value] of Object.entries(this.actor.system.damageReduction.damageTypes)) {
+                
+                if (value.immune || value.resistance || value.vulnerability) {
+                    let type = 'immune';
+                    let info = "";
+                    let tooltip = [];
+                    tooltip.push(value.category);
+                    let id =  parent.id;
+
+                    if (value.vulnerability) {
+                        type = 'vulnerability';
+                        id = 'vulnerability';
+                        info = value.vulnerable;
+                        if (info) {
+                            tooltip.push("Vulnerability (X)");
+                        } else {
+                            tooltip.push("Vulnerability (Double)");
+                        }
+                    } else if (value.resistance) {
+                        type = 'resistence';
+                        id = 'resistence';
+                        info = value.resist;
+                        if (info) {
+                            tooltip.push("Resistance (X)");
+                        } else {
+                            tooltip.push("Resistance (Half)");
+                        }
+                        
+                    } else {
+                        tooltip.push("Resistance (Immune)");
+                        id ="immunity";
+                    }
+                    this.addActions([{
+                        id: key,
+                        img: `systems/dc20rpg/images/sheet/resistances/${key}.svg`,
+                        icon1: iconTypes[type],
+                        info1: { text: info },
+                        name: value.label,
+                        cssClass: "toggle active",
+                        tooltip: tooltip.join(" "),
+                        encodedValue: ["",key].join(this.delimiter)
+                    }], {id: id ,type: 'system'})
+                }
+            }
         }
         async _getAllActions(parent) {
             const keys = Object.keys(action_list);
@@ -413,15 +470,27 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
             let actions = [];
             const conditions = CONFIG.statusEffects;
             conditions.forEach(_status => {
-                let action =  {
-                    id: _status.id,
-                    name: _status.label,
-                    cssClass: this.actor.statuses.filter(i => i.id ==_status.id).size > 0 ? "toggle active" : "toggle",
-                    img: _status.img,
-                    tooltip: format_tooltip(_status.description),
-                    encodedValue: ['statuses', _status.id].join(this.delimiter)
+                if (!(this.actor.system.conditions[_status.id]?.immunity)) {
+                    let action =  {
+                        id: _status.id,
+                        name: _status.label,
+                        cssClass: this.actor.statuses.filter(i => i.id ==_status.id).size > 0 ? "toggle active" : "toggle",
+                        img: _status.img,
+                        tooltip: format_tooltip(_status.description),
+                        encodedValue: ['statuses', _status.id].join(this.delimiter)
+                    }
+                    this.addActions([action], parent);
+                } else {
+                    let action =  {
+                        id: _status.id,
+                        name: _status.label,
+                        cssClass: "toggle active",
+                        img: _status.img,
+                        tooltip: format_tooltip(_status.description),
+                        encodedValue: ['', ''].join(this.delimiter)
+                    }
+                    this.addActions([action], {id: "immunity", type: "system"});
                 }
-                this.addActions([action], parent);
             })
             const tooltip = `
             <p>Left click: increase the ${coreModule.api.Utils.i18n("dc20rpg.sheet.exhaustion")}</p>

@@ -69,6 +69,9 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                 utility:    { id: "actions_utility", name: "Utility", type: "system", settings: {collapse: false} },
                 reaction:   { id: "actions_reaction", name: "Reaction", type: "system", settings: {collapse: false} },
                 skillBased: { id: "actions_skillBased", name: "Skill Based", type: "system", settings: {collapse: false} },
+                immunity:   { id: "immunity", name: "Immunity", type: "system", settings: {collapse: false} },
+                vulnerability:   { id: "vulnerability", name: "Vulnerability", type: "system", settings: {collapse: false} },
+                resistence: { id: 'resistence', name: "Resistences", type: 'system'}
             }
             const groups = GROUP
             Object.values(groups).forEach(group => {
@@ -106,6 +109,20 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                         image: "icons/environment/people/archer.webp",
                         settings: {
                             image: "icons/environment/people/archer.webp",
+                            collapse: false
+                        }
+                    },
+                    {
+                        nestId: 'resistences',
+                        id: 'resistences',
+                        name: "Resistences",
+                        groups: [
+                            { ...groups.resistence, nestId: 'resistences_resistences' },
+                            { ...groups.immunity, nestId: 'resistences_immunity'},
+                            { ...groups.vulnerability, nestId: 'resistences_vulnerability'}
+                        ],
+                        settings: {
+                            image: "icons/equipment/shield/Scutum-steel-worn.webp",
                             collapse: false
                         }
                     },
@@ -174,7 +191,7 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                         name: coreModule.api.Utils.i18n('dc20rpg.sheet.effects.conditions'),
                         groups: [
                             { ...groups.exhaustion, nestId: 'conditions_exhaustion'},
-                            { ...groups.conditions, nestId: 'conditions_conditions' }
+                            { ...groups.conditions, nestId: 'conditions_conditions' },
                         ],
                         settings: {
                             image: "icons/skills/wounds/injury-face-impact-orange.webp",

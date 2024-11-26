@@ -4,7 +4,7 @@ export let Utils = null
 
 export function format_tooltip(original_str) {
     const pattern = /@\w+\[.*?\]\{(.*?)\}/g;
-    let formatted_str = original_str.replace(pattern, '$1');
+    let formatted_str = String(original_str).replace(pattern, '$1');
     // remove style
     formatted_str = formatted_str.replace(/style="[^"]*"/g, "");
     return formatted_str;

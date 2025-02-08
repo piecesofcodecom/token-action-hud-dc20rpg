@@ -69,6 +69,7 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                 utility:    { id: "actions_utility", name: "Utility", type: "system", settings: {collapse: false} },
                 reaction:   { id: "actions_reaction", name: "Reaction", type: "system", settings: {collapse: false} },
                 skillBased: { id: "actions_skillBased", name: "Skill Based", type: "system", settings: {collapse: false} },
+                others:     { id: "actions_others", name: "Others", type: "system", settings: {collapse: false} },
                 immunity:   { id: "immunity", name: "Immunity", type: "system", settings: {collapse: false} },
                 vulnerability:   { id: "vulnerability", name: "Vulnerability", type: "system", settings: {collapse: false} },
                 resistence: { id: 'resistence', name: "Resistences", type: 'system'}
@@ -81,6 +82,23 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
             const groupsArray = Object.values(groups)
             DEFAULTS = {
                 layout: [
+                    {
+                        nestId: 'points',
+                        id: 'points',
+                        name: "Points",
+                        groups: [
+                            { ...groups.stamina, nestId: 'points_stamina' },
+                            { ...groups.mana, nestId: 'points_mana' },
+                            { ...groups.grit, nestId: 'points_grit' },
+                            { ...groups.action, nestId: 'points_ap' },
+                            { ...groups.health, nestId: 'points_health' },
+                            {...groups.doomed,  nestId: 'points_doomed'}
+                        ],
+                        settings: {
+                            image: "icons/sundries/gaming/chess-pawn-white-glass.webp",
+                            collapse: false
+                        }
+                    },
                     {
                         nestId: 'attributes',
                         id: 'attributes',
@@ -136,6 +154,7 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                             { ...groups.utility, nestId: 'actions_utility' },
                             { ...groups.reaction, nestId: 'actions_reaction' },
                             { ...groups.skillBased, nestId: 'actions_skillBased' },
+                            { ...groups.others, nestId: 'actions_others' },
                         ],
                         settings: {
                             image: "icons/skills/movement/arrow-upward-white.webp",
@@ -165,23 +184,6 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                         ],
                         settings: {
                             image: "icons/magic/symbols/rune-sigil-black-pink.webp",
-                            collapse: false
-                        }
-                    },
-                    {
-                        nestId: 'points',
-                        id: 'points',
-                        name: "Points",
-                        groups: [
-                            { ...groups.stamina, nestId: 'points_stamina' },
-                            { ...groups.mana, nestId: 'points_mana' },
-                            { ...groups.grit, nestId: 'points_grit' },
-                            { ...groups.action, nestId: 'points_ap' },
-                            { ...groups.health, nestId: 'points_health' },
-                            {...groups.doomed,  nestId: 'points_doomed'}
-                        ],
-                        settings: {
-                            image: "icons/sundries/gaming/chess-pawn-white-glass.webp",
                             collapse: false
                         }
                     },

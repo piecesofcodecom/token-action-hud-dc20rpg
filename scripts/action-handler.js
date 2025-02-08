@@ -1,6 +1,6 @@
 import { PATH_ASSETS } from './constants.js'
 import { format_tooltip } from './utils.js'
-import { getActions, action_list } from './actions.js'
+import { action_categories } from './actions.js'
 export let DC20ActionHandler = null
 
 function capitalizeFirstLetter(word) {
@@ -27,18 +27,13 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 this._getTechniques({ id: 'defenses', type: 'system' }, "Defense");
                 this._getTechniques({ id: 'saves', type: 'system' }, "Save");
                 this._getOtherTechniques({ id: 'maneuvers', type: 'system' }, ["Save","Attack", "Defense"]);
-                this._getSpells({ id: 'spells', type: 'system' }, "spell")
-                this._getSpells({ id: 'cantrips', type: 'system' }, "cantrip");
-                
                 this._getDoomed({ id: 'doomed', type: 'system'});
-                
                 this._getUtils({id: "utils", type: 'system'});
-                
                 //this._getSpecificFeatures({id: 'attacks', type: 'system'}, 'attack');
-                
                 await this._getAllActions({id: 'actions', type: 'system'});
-                // TODO DC20RPG.actions
             }
+            this._getSpells({ id: 'spells', type: 'system' }, "spell")
+            this._getSpells({ id: 'cantrips', type: 'system' }, "cantrip");
             await this._getSkills({ id: 'skills', type: 'system' });
             await this._getSkills({ id: 'knowledge', type: 'system' });
             this._getAttributes({ id: 'save', type: 'system' });
@@ -108,21 +103,17 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
             }
         }
         async _getAllActions(parent) {
-            const keys = Object.keys(action_list);
+            const actions = this.actor.items.filter(i => i.type == "basicAction");
 
-            for (let category of keys) {
-                action_list[category].forEach(async action => {
-                    const page = await fromUuid(CONFIG.DC20RPG.actionsJournalUuid[action]);
-                    this.addActions([{
-                        id: action,
-                        img: getActions()[action].img,
-                        name: getActions()[action].name,
-                        //cssClass: !effect.disabled ? "toggle active" : "toggle",
-                        tooltip: page ? format_tooltip(page.text.content) : getActions()[action].name,
-                        encodedValue: ["action",action].join(this.delimiter)
-                    }],{ id: "actions_"+category, type: "system"})
-    
-                });
+            for (let action of actions) {
+                this.addActions([{
+                    id: action.id,
+                    img: action.img,
+                    name: action.name,
+                    tooltip: format_tooltip(action.system.description),
+                    encodedValue: ["item",action.id].join(this.delimiter)
+                }],{ id: action_categories.includes(action.system.category) ? "actions_"+action.system.category : "actions_others", type: "system"})
+
             }
         }
         _getEffects(parent) {
@@ -311,7 +302,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 list_skills = this.token.actor.system.tradeSkills;
                 prefix_title = "dc20rpg.trades";
             }
-            const all_skills_journal = {...CONFIG.DC20RPG.skillsJournalUuid, ...CONFIG.DC20RPG.tradeSkillsJournalUuid};
+            const all_skills_journal = {...CONFIG.DC20RPG.SYSTEM_CONSTANTS.JOURNAL_UUID.skillsJournal, ...CONFIG.DC20RPG.SYSTEM_CONSTANTS.JOURNAL_UUID.tradeSkillsJournal};
             for (let skill of skills) {
                 if (list_skills[skill]["knowledgeSkill"] == knowledgeSkill && list_skills[skill]["custom"] == customSkill) {
                     let page = await fromUuid(all_skills_journal[skill]);
@@ -426,7 +417,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
             ["stamina", "mana", "grit", "ap", "health"].forEach(point => {
                 let actions = [];
                 let parent = {id: point, type: "system"}
-                if ( this.actor.system.resources[point].max > 0) {
+                if ( this.actor.system.resources[point]?.max > 0) {
                     const right_text = point == "ap" ? coreModule.api.Utils.i18n('dc20rpg.sheet.resource.useAp') : coreModule.api.Utils.i18n(`dc20rpg.sheet.resource.spend${capitalizeFirstLetter(point)}`);
                     const tooltip = `
                         <p><b>Left click</b>: ${coreModule.api.Utils.i18n(`dc20rpg.sheet.resource.regain${capitalizeFirstLetter(point)}`)}</p>
@@ -470,7 +461,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
             let actions = [];
             const conditions = CONFIG.statusEffects;
             conditions.forEach(_status => {
-                if (!(this.actor.system.conditions[_status.id]?.immunity)) {
+                if (!(this.actor.system.statusResistances[_status.id]?.immunity)) {
                     let action =  {
                         id: _status.id,
                         name: _status.label,

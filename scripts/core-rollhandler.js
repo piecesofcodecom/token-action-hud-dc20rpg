@@ -24,7 +24,8 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                         this.actor.update({[`system.exhaustion`] : ex});
                     break;
                 case "initiative":
-                    this._toggleInitiative();
+                    this.actor.rollInitiative({createCombatants: true, rerollInitiative: true});
+                    //this._toggleInitiative();
                     break;
                 case "mana": 
                 case "ap":

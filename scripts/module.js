@@ -58,10 +58,11 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                 attacks:    { id: 'attacks', name: coreModule.api.Utils.i18n('dc20rpg.sheet.checkSave.attack'), type: 'system', settings: {collapse: false}  },
                 defenses:   { id: 'defenses', name: "Defense", type: 'system', settings: {collapse: false}  },
                 saves:      { id: 'saves', name: coreModule.api.Utils.i18n("dc20rpg.dialog.display.save"), type: 'system', settings: {collapse: false}  },
-                doomed:     { id: 'doomed', name: coreModule.api.Utils.i18n('dc20rpg.sheet.doomed'), type: 'system', settings: {collapse: false}  },
+                doomed:     { id: 'doomed', name: coreModule.api.Utils.i18n('dc20rpg.conditions.doomed'), type: 'system', settings: {collapse: false}  },
                 fclass:     { id: 'feature_class', name: coreModule.api.Utils.i18n('TYPES.Item.class'), type: 'system', settings: {collapse: false}  },
                 fother:     { id: 'feature_other', name: coreModule.api.Utils.i18n('dc20rpg.dialog.settings.nav.other'), type: 'system', settings: {collapse: false}  },
                 fancestry:  { id: 'feature_ancestry', name: coreModule.api.Utils.i18n('TYPES.Item.ancestry'), type: 'system', settings: {collapse: false}  },
+                fmonster:   { id: 'feature_monster', name: coreModule.api.Utils.i18n('dc20rpg.sheet.creature'), type: 'system', settings: {collapse: false}  },
                 effects:    { id: 'effects', name: coreModule.api.Utils.i18n('dc20rpg.effect.sheet.effectsTab'), type: 'system', settings: {collapse: false}  },
                 utils:      { id: 'utils', name: "Utilities", type: 'system', settings: {collapse: false}  },
                 offensive:  { id: 'actions_offensive', name: "Offensive", type: 'system', settings: {collapse: false}  },
@@ -222,7 +223,8 @@ Hooks.on('tokenActionHudCoreApiReady', async (coreModule) => {
                         groups: [
                             { ...groups.fclass, nestId: 'features_class' },
                             { ...groups.fother, nestId: 'features_other' },
-                            { ...groups.fancestry, nestId: "features_ancestry"}
+                            { ...groups.fancestry, nestId: "features_ancestry"},
+                            { ...groups.fmonster, nestId: "features_monster"}
                         ],
                         settings: {
                             image: "icons/sundries/flags/banner-symbol-eye-purple.webp",

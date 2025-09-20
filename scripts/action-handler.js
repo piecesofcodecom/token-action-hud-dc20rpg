@@ -9,31 +9,31 @@ function capitalizeFirstLetter(word) {
 
 function getCosts(el) {
     let resources = {}
-                let cost = '&nbsp;0';
-                if (el.system.costs.resources.actionPoint) {
-                    resources.info1 = {
-                        icon: '&nbsp;' + el.system.costs.resources.actionPoint,
-                        class: "ap fa-dice-d6 fa-solid cost-icon",
-                        title: "Resources"
-                    };
-                }
+    let cost = '&nbsp;0';
+    if (el.system.costs.resources.actionPoint) {
+        resources.info1 = {
+            icon: '&nbsp;' + el.system.costs.resources.actionPoint,
+            class: "ap fa-dice-d6 fa-solid cost-icon",
+            title: "Resources"
+        };
+    }
 
-                if (el.system.costs.resources.stamina) {
-                    resources.info2 = {
-                        icon: '&nbsp;' + el.system.costs.resources.stamina,
-                        class: "sp fa-hand-fist fa-solid cost-icon",
-                        title: "Resources"
-                    };
-                }
+    if (el.system.costs.resources.stamina) {
+        resources.info2 = {
+            icon: '&nbsp;' + el.system.costs.resources.stamina,
+            class: "sp fa-hand-fist fa-solid cost-icon",
+            title: "Resources"
+        };
+    }
 
-                if (el.system.costs.resources.mana) {
-                    resources.info3 = {
-                        icon: '&nbsp;' + el.system.costs.resources.mana,
-                        class: "mp fa-star fa-solid cost-icon",
-                        title: "Resources"
-                    };
-                }
-                return resources;
+    if (el.system.costs.resources.mana) {
+        resources.info3 = {
+            icon: '&nbsp;' + el.system.costs.resources.mana,
+            class: "mp fa-star fa-solid cost-icon",
+            title: "Resources"
+        };
+    }
+    return resources;
 }
 
 Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
@@ -48,8 +48,10 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
             if (!actor) return;
 
             if (["npc", "character"].includes(actor.type)) {
-                if (actor.type != "npc")
+                if (actor.type != "npc") {
                     await this._getSkills({ id: 'trade', type: 'system' });
+                    //await this._getSkills({ id: 'knowledge', type: 'system' });
+                }
                 this._getItems({ id: 'weapons', type: 'system' }, "weapon");
                 this._getItems({ id: 'consumables', type: 'system' }, "consumable");
                 this._getTechniques({ id: 'attacks', type: 'system' }, "Attack");
@@ -64,7 +66,6 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
             this._getSpells({ id: 'spells', type: 'system' }, "spell")
             this._getSpells({ id: 'cantrips', type: 'system' }, "cantrip");
             await this._getSkills({ id: 'skills', type: 'system' });
-            await this._getSkills({ id: 'knowledge', type: 'system' });
             this._getAttributes({ id: 'save', type: 'system' });
             this._getAttributes({ id: 'check', type: 'system' });
             this._getConditions({ id: 'conditions', type: 'system' });
@@ -331,10 +332,20 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
             const macroType = parent.id;
             let knowledgeSkill = undefined;
             let customSkill = undefined;
+            let regularSkill = undefined;
             let prefix_title = "dc20rpg.skills";
             if (macroType == "knowledge") {
                 knowledgeSkill = true;
                 customSkill = false;
+                regularSkill = false;
+            } else if (macroType == "skills") {
+                knowledgeSkill = false;
+                customSkill = false;
+                regularSkill = true;
+            } else if (macroType == "trade") {
+                knowledgeSkill = false;
+                customSkill = false;
+                regularSkill = false;
             }
             let actions = []
             let skills = Object.keys(this.token.actor.system.skills);
@@ -345,9 +356,20 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 prefix_title = "dc20rpg.trades";
             }
             const all_skills_journal = { ...CONFIG.DC20RPG.SYSTEM_CONSTANTS.JOURNAL_UUID.skillsJournal, ...CONFIG.DC20RPG.SYSTEM_CONSTANTS.JOURNAL_UUID.tradeSkillsJournal };
+            //console.warn(skills)
             for (let skill of skills) {
-                if (list_skills[skill]["knowledgeSkill"] == knowledgeSkill && list_skills[skill]["custom"] == customSkill) {
-                    let page = await fromUuid(all_skills_journal[skill]);
+
+                let shouldShow = false;
+                if (list_skills[skill]?.mastery > 0) {
+                    shouldShow = true;
+                }
+                if ((list_skills[skill]["knowledgeSkill"] == knowledgeSkill && list_skills[skill]["custom"] == customSkill) || shouldShow) {
+
+                    let page = { text: { content: coreModule.api.Utils.i18n(`${prefix_title}.${skill}_desc`) } };
+                    if (all_skills_journal[skill] != undefined) {
+                        page = await fromUuid(all_skills_journal[skill]);
+                    }
+
                     let mod = list_skills[skill].modifier;
                     actions.push({
                         id: skill,
@@ -358,7 +380,9 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                         encodedValue: [macroType, skill].join(this.delimiter),
                     })
                 }
+
             }
+
             this.addActions(actions, parent);
         }
 
